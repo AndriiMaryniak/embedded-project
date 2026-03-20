@@ -1,1 +1,2 @@
 chore: initial project structure commit
+chore: add project requirements and gitignore
