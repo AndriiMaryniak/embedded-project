@@ -3,3 +3,4 @@ chore: add project requirements and gitignore
 docs: add hardware specs and architecture diagrams
 feat: add Wokwi circuit diagram with DHT22 and Relay
 docs: update API endpoints specification
+feat: setup Flask server and basic API routing
