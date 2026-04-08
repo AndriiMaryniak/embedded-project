@@ -8,3 +8,4 @@ feat: publish load data from ESP32 via MQTT
 feat: build basic Streamlit dashboard UI layout
 feat: parse incoming MQTT telemetry JSON on backend
 feat: handle relay commands from MQTT on ESP32
+style: update dashboard colors to dark theme traffic light
