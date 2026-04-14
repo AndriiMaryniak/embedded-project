@@ -24,6 +24,8 @@ DHTesp dht;
 
 unsigned long lastMsg = 0;
 
+
+
 void setup_wifi() {
   lcd.setCursor(0, 0);
   lcd.print("Connecting WiFi.");

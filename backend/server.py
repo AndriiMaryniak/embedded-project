@@ -71,7 +71,7 @@ class KalmanFilter1D:
         self.p = (1 - k) * p_predict
         return round(self.x, 2)
 
-power_filter = KalmanFilter1D()
+power_filter = KalmanFilter1D(process_noise=0.8, measurement_noise=0.1)
 
 def on_connect(client, userdata, flags, rc):
     print("Підключено до MQTT!")
@@ -181,4 +181,4 @@ if __name__ == "__main__":
     client.connect(MQTT_BROKER, 1883, 60)
     client.loop_start()
     #socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)

@@ -6,7 +6,7 @@ import requests
 
 # Налаштування сторінки
 st.set_page_config(page_title="Енергомонітор ESP32", page_icon="⚡", layout="wide")
-DB_NAME = "backend/energy_data.db" # Вкажи правильний шлях до бази даних
+DB_NAME = "energy_data.db" # Вкажи правильний шлях до бази даних
 
 # --- ФУНКЦІЇ ---
 def get_telemetry():
@@ -49,7 +49,7 @@ with st.sidebar:
     if st.button("Оновити ліміт", type="primary"):
         try:
             # Відправляємо POST запит на твій server.py
-            response = requests.post('http://127.0.0.1:5000/api/threshold', json={'threshold': new_limit})
+            response = requests.post('http://127.0.0.1:5001/api/threshold', json={'threshold': new_limit})
             if response.status_code == 200:
                 st.success("✅ Ліміт успішно оновлено!")
         except Exception as e:
