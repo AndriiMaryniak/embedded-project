@@ -11,3 +11,4 @@ feat: handle relay commands from MQTT on ESP32
 style: update dashboard colors to dark theme traffic light
 feat: add critical alert trigger and buzzer logic on hardware
 feat: add SQLite persistence schema for telemetry and alerts
+feat: implement 1D Kalman filter for sensor noise reduction
