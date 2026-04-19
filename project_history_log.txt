@@ -14,3 +14,4 @@ feat: add SQLite persistence schema for telemetry and alerts
 feat: implement 1D Kalman filter for sensor noise reduction
 feat: integrate WebSockets for real time gauge charts
 fix: handle websocket reconnect on network drop
+fix: correct timezone issue in sqlite alerts queries
