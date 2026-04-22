@@ -16,3 +16,4 @@ feat: integrate WebSockets for real time gauge charts
 fix: handle websocket reconnect on network drop
 fix: correct timezone issue in sqlite alerts queries
 feat: add power limits control panel to UI dashboard
+feat: add hysteresis logic to state machine to prevent bouncing
