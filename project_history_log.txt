@@ -19,3 +19,4 @@ feat: add power limits control panel to UI dashboard
 feat: add hysteresis logic to state machine to prevent bouncing
 feat: implement predictive shutdown algorithm based on load trend
 test: write unit tests for Kalman filter math convergence
+test: add pytest fixtures for db isolation and state cleanup
