@@ -6,9 +6,9 @@ from io import StringIO
 from flask import Flask, Response, request, jsonify
 
 
-MQTT_BROKER = "test.mosquitto.org"
-TOPIC_TELEMETRY = "energysaver/telemetry"
-TOPIC_COMMAND = "energysaver/command"
+MQTT_BROKER = "broker.hivemq.com"
+TOPIC_TELEMETRY = "maryniak/fei34/telemetry" 
+TOPIC_COMMAND = "maryniak/fei34/command"
 DB_NAME = "energy_data.db"
 
 app = Flask(__name__)
@@ -74,15 +74,17 @@ class KalmanFilter1D:
 power_filter = KalmanFilter1D(process_noise=0.8, measurement_noise=0.1)
 
 def on_connect(client, userdata, flags, rc):
-    print("Підключено до MQTT!")
+    print("✅ Підключено до MQTT! Чекаю на дані...")
     client.subscribe(TOPIC_TELEMETRY)
 
 def on_message(client, userdata, msg):
     global is_overloaded, current_status
     try:
+        print(f"📥 Отримано сирі дані з сенсора: {msg.payload.decode('utf-8')}")
         data = json.loads(msg.payload.decode('utf-8'))
         raw_power, temp = data.get("power", 0.0), data.get("temp", 0.0)
         filtered_power = power_filter.update(raw_power)
+        
         
         save_data('telemetry', raw_power=raw_power, filtered_power=filtered_power, temperature=temp)
         threshold = get_threshold()
@@ -176,7 +178,7 @@ def export_csv():
 
 if __name__ == "__main__":
     init_db()
-    client = mqtt.Client()
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1)
     client.on_connect, client.on_message = on_connect, on_message
     client.connect(MQTT_BROKER, 1883, 60)
     client.loop_start()
