@@ -23,3 +23,4 @@ test: add pytest fixtures for db isolation and state cleanup
 fix: resolve race condition in chart render and update DOM selectors
 test: add Selenium E2E test cases for dashboard rendering
 opt: enable WiFi Modem Sleep for ESP32 power saving
+refactor: replace String class with char arrays
