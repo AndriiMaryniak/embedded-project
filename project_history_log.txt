@@ -26,3 +26,4 @@ opt: enable WiFi Modem Sleep for ESP32 power saving
 refactor: replace String class with char arrays
 fix: resolve memory leak in JSON payload building
 fix: migrate to HiveMQ broker to resolve 7s timeout loop
+perf: add B Tree indexes to SQLite schema for fast queries
