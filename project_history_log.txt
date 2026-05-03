@@ -29,3 +29,4 @@ fix: migrate to HiveMQ broker to resolve 7s timeout loop
 perf: add B Tree indexes to SQLite schema for fast queries
 perf: implement non blocking delay using millis on ESP32
 refactor: move UI to standalone static microservice with CORS
+docs: add stage 11 technical documentation and presentations
