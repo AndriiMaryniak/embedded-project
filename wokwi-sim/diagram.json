@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "author": "Energy Saver IoT Team",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -183.7, "left": -153.8, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": -134.2, "left": 182.4, "attrs": {} },
+    { "type": "wokwi-lcd1602", "id": "lcd1", "top": 6.4, "left": 620, "attrs": { "pins": "i2c" } },
+    { "type": "wokwi-dht22", "id": "dht1", "top": 182.7, "left": -159, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led_green",
+      "top": -22.8,
+      "left": 253.4,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_red",
+      "top": -22.8,
+      "left": 320.6,
+      "attrs": { "color": "red" }
+    },
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": 232.8, "left": 289.8, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 138.35,
+      "left": 240,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 157.55,
+      "left": 240,
+      "attrs": { "value": "220" }
+    }
+  ],
+  "connections": [
+    [ "esp:3V3", "pot1:VCC", "red", [ "h-110.21", "v-115.2", "h0.8" ] ],
+    [ "esp:GND.1", "pot1:GND", "black", [ "h-129.41", "v-57.6" ] ],
+    [ "esp:34", "pot1:SIG", "green", [ "h-119.81", "v-182.4" ] ],
+    [ "esp:5V", "relay1:VCC", "red", [ "h-33.41", "v-316.8" ] ],
+    [ "esp:GND.2", "relay1:GND", "black", [ "h52.84", "v-134" ] ],
+    [ "esp:18", "relay1:IN", "blue", [ "h81.64", "v-201.4" ] ],
+    [ "esp:5V", "lcd1:VCC", "red", [ "v220.8", "h456.19", "v-268.8", "v-105.7" ] ],
+    [ "esp:GND.3", "lcd1:", "black", [] ],
+    [ "esp:21", "lcd1:SDA", "yellow", [ "h446.44", "v-19.4" ] ],
+    [ "esp:22", "lcd1:SCL", "cyan", [] ],
+    [ "esp:3V3", "dht1:VCC", "red", [ "h-215.81", "v316.8", "h67.2" ] ],
+    [ "esp:GND.1", "dht1:GND", "black", [ "h-62.21", "v38.4", "v134.4", "h-57.6" ] ],
+    [ "esp:15", "dht1:SDA", "purple", [ "h43.24", "v172.8", "h-278.5" ] ],
+    [ "esp:GND.2", "led_green:C", "black", [ "h52.84", "h124.4" ] ],
+    [ "esp:GND.2", "led_red:C", "black", [ "h234.84" ] ],
+    [ "esp:GND.2", "buzzer:2", "black", [ "h340.84", "v288" ] ],
+    [ "led_green:A", "r1:2", "green", [ "h28.8", "v124.8" ] ],
+    [ "esp:4", "r1:1", "green", [ "h100.84", "v-76.8" ] ],
+    [ "led_red:A", "r2:2", "red", [ "v144", "h-75.6" ] ],
+    [ "esp:2", "r2:1", "red", [ "h100.84", "v28.8" ] ],
+    [ "esp:5", "buzzer:1", "orange", [ "h91.24", "v201.6" ] ]
+  ],
+  "dependencies": {}
+}
