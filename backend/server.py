@@ -3,16 +3,16 @@ import json
 import sqlite3
 import csv
 from io import StringIO
-from flask import Flask, render_template, Response, request, jsonify
-from flask_socketio import SocketIO
+from flask import Flask, Response, request, jsonify
 
-MQTT_BROKER = "test.mosquitto.org"
-TOPIC_TELEMETRY = "energysaver/telemetry"
-TOPIC_COMMAND = "energysaver/command"
+
+MQTT_BROKER = "broker.hivemq.com"
+TOPIC_TELEMETRY = "maryniak/fei34/telemetry" 
+TOPIC_COMMAND = "maryniak/fei34/command"
 DB_NAME = "energy_data.db"
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*")
+#socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Глобальні змінні стану (State Machine)
 is_overloaded = False
@@ -71,18 +71,20 @@ class KalmanFilter1D:
         self.p = (1 - k) * p_predict
         return round(self.x, 2)
 
-power_filter = KalmanFilter1D()
+power_filter = KalmanFilter1D(process_noise=0.8, measurement_noise=0.1)
 
 def on_connect(client, userdata, flags, rc):
-    print("Підключено до MQTT!")
+    print("✅ Підключено до MQTT! Чекаю на дані...")
     client.subscribe(TOPIC_TELEMETRY)
 
 def on_message(client, userdata, msg):
     global is_overloaded, current_status
     try:
+        print(f"📥 Отримано сирі дані з сенсора: {msg.payload.decode('utf-8')}")
         data = json.loads(msg.payload.decode('utf-8'))
         raw_power, temp = data.get("power", 0.0), data.get("temp", 0.0)
         filtered_power = power_filter.update(raw_power)
+        
         
         save_data('telemetry', raw_power=raw_power, filtered_power=filtered_power, temperature=temp)
         threshold = get_threshold()
@@ -102,7 +104,7 @@ def on_message(client, userdata, msg):
                 new_status = 'ПОПЕРЕДЖЕННЯ'
 
         # Відправка на фронтенд
-        socketio.emit('update', {'power': filtered_power, 'temperature': temp, 'status': new_status, 'threshold': threshold})
+        #socketio.emit('update', {'power': filtered_power, 'temperature': temp, 'status': new_status, 'threshold': threshold})
         
         # ЛОГІКА ЗАПИСУ В БАЗУ ДАНИХ ТА КЕРУВАННЯ РЕЛЕ
         if new_status != current_status:
@@ -133,9 +135,9 @@ def on_message(client, userdata, msg):
     except Exception as e:
         print(f"Помилка обробки MQTT: {e}")
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+#@app.route('/')
+#def index():
+    #return render_template('index.html')
 
 @app.route('/api/threshold', methods=['POST'])
 def update_threshold():
@@ -176,8 +178,9 @@ def export_csv():
 
 if __name__ == "__main__":
     init_db()
-    client = mqtt.Client()
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1)
     client.on_connect, client.on_message = on_connect, on_message
     client.connect(MQTT_BROKER, 1883, 60)
     client.loop_start()
-    socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
+    #socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
+    app.run(host='0.0.0.0', port=5001)

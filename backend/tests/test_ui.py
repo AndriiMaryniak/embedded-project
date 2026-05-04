@@ -1,40 +1,35 @@
+import pytest
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 import time
 
-def test_web_dashboard():
-    # Ініціалізація браузера (Chrome)
-    options = webdriver.ChromeOptions()
-    options.add_argument('--headless') # Запуск без відкриття вікна
-    driver = webdriver.Chrome(options=options)
+def test_streamlit_dashboard_loads():
+    """Тестуємо, чи успішно завантажується UI інтерфейс"""
+    
+    # Налаштовуємо "безголовий" режим браузера (без візуального вікна)
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    
+    driver = webdriver.Chrome(options=chrome_options)
     
     try:
-        # Відкриваємо наш локальний дашборд
-        driver.get("http://127.0.0.1:5000")
+        # Streamlit за замовчуванням працює на порту 8501
+        print("\n🌐 Відкриваємо веб-інтерфейс...")
+        driver.get("http://localhost:8501")
         
-        # Перевіряємо заголовок сторінки
-        assert "Energy Saver" in driver.title
+        # Даємо Streamlit кілька секунд на повне рендерення графіків
+        time.sleep(3)
         
-        # Перевіряємо наявність блоку статусу
-        status_element = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.ID, "status-val"))
-        )
-        assert status_element.text != ""
+        # QA Перевірка: перевіряємо, чи сторінка не пуста і чи має правильний заголовок
+        page_title = driver.title
+        page_source = driver.page_source
         
-        # Перевіряємо взаємодію з інпутом ліміту
-        limit_input = driver.find_element(By.ID, "limit")
-        limit_input.clear()
-        limit_input.send_keys("3.5")
-        
-        button = driver.find_element(By.XPATH, "//button[contains(text(), 'Застосувати')]")
-        button.click()
-        
-        print("E2E Тест UI: УСПІШНО ПРОЙДЕНО")
+        assert page_title != "", "Сторінка завантажилась, але заголовок порожній!"
+        assert "Енергомонітор" in page_source or "Журнал подій" in page_source, "Не знайдено елементів дашборду на сторінці!"        
+        print(f"✅ Інтерфейс успішно завантажено! Заголовок: {page_title}")
         
     finally:
+        # Обов'язково закриваємо браузер після тесту
         driver.quit()
-
-if __name__ == "__main__":
-    test_web_dashboard()
